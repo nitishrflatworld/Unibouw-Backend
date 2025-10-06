@@ -116,3 +116,9 @@ StyleCopReport.xml
 _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
+
+# Ignore Visual Studio and build folders/files
+.vs/
+*.dbtcache.v2
+obj/
+*.cache
