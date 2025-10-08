@@ -87,6 +87,28 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// CORS
+string[] allowedOrigins = builder.Environment.IsDevelopment()
+    ? new[] { "http://localhost:4200" }              // Local Angular
+    : builder.Environment.IsEnvironment("QA")
+        ? new[] { "https://qa-portal.unibouw.com" } // QA
+        : builder.Environment.IsEnvironment("UAT")
+            ? new[] { "https://uat-portal.unibouw.com" } // UAT
+            : builder.Environment.IsProduction()
+                ? new[] { "https://portal.unibouw.com" } // Production
+                : Array.Empty<string>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins", policy =>
+    {
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -102,6 +124,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Use CORS
+app.UseCors("AllowSpecificOrigins");
 
 // Important: order matters
 app.UseAuthentication();
