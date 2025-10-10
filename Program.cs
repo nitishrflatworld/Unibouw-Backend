@@ -2,11 +2,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
+using UnibouwAPI.Repositories;
+using UnibouwAPI.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add controllers
 builder.Services.AddControllers();
+
+//Register Unibouw Repository
+builder.Services.AddScoped<IWorkItems, WorkItemsRepository>();
+builder.Services.AddScoped<IWorkItemCategoryType, WorkItemCategoryTypeRepository>();
 
 // Configure Azure AD authentication with custom Unauthorized/Forbidden responses
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
